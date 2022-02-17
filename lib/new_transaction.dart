@@ -13,7 +13,8 @@ class NewTransaction extends StatefulWidget {
 class _NewTransactionState extends State<NewTransaction> {
   final _titleController = TextEditingController();
   final _amountController = TextEditingController();
-  late DateTime _selectedDate;
+  DateTime _selectedDate = DateTime(2022);
+  
 
   void _submitData() {
     if(_amountController.text.isEmpty){
@@ -38,7 +39,7 @@ class _NewTransactionState extends State<NewTransaction> {
     showDatePicker(
         context: context,
         initialDate: DateTime.now(),
-        firstDate: DateTime(2019),
+        firstDate: DateTime(2022),
         lastDate: DateTime.now())
         .then((pickedDate) {
       if (pickedDate == null) {
@@ -80,21 +81,25 @@ class _NewTransactionState extends State<NewTransaction> {
                         : 'Selected Date: ${DateFormat.yMd().format(_selectedDate)}',
                   ),
                 ),
-                FlatButton(
+                TextButton(
                   child: Text(
                     'Choose Date',
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
                   onPressed: _presentDatePicker,
-                  textColor: Theme.of(context).primaryColor,
+                  style: TextButton.styleFrom(
+                    backgroundColor: Colors.redAccent, // if you want to change button colour
+                  ),
                 ),
               ],
             ),
           ),
-          RaisedButton(
+          ElevatedButton(
             child: Text('Add Transaction'),
-            color: Theme.of(context).primaryColor,
-            textColor: Colors.white,
+            style: ElevatedButton.styleFrom(
+              primary: Colors.lightGreenAccent, // Background color
+              onPrimary: Colors.amber, // Text Color (Foreground color)
+            ),
             onPressed: _submitData,
           ),
         ],
