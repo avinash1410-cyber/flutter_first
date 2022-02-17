@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 
 import './transaction_list.dart';
 import './transaction.dart';
+import './new_transaction.dart';
+
+
 
 
 
@@ -50,15 +53,31 @@ class MyHomePage extends StatefulWidget{
 
 class _MyHomePageState extends State<MyHomePage> {
 
-//Let's add demo list of transactions into a variable, it must be final
   final List<Transaction> _userTransactions = [
-    Transaction(id: '1', title: 'New Shoes', amount: 2.00, date: DateTime.now()),
-    Transaction(id: '2', title: 'Watch', amount: 4.00, date: DateTime.now()),
+//commented the dummy transactions
+    //  Transaction(id: '1', title: 'New Shoes', amount: 2.00, date: DateTime.now()),
+    //  Transaction(id: '2', title: 'Watch', amount: 4.00, date: DateTime.now()),
   ];
 
-//adding a function into our file which needs to pass into the constructor of the transactions_list.dart file
+  void _addNewTransaction(String title, double amount, DateTime chosenDate){
+    final newTx = Transaction(title: title, amount: amount, id: DateTime.now().toString(), date: chosenDate);
+
+    setState(() {
+      this._userTransactions.add(newTx);
+    });
+  }
+
+  void _startAddNewTransaction(BuildContext ctx){
+//it's been coming from material.dart
+    showModalBottomSheet(
+        context: ctx,
+        builder: (_){
+          return NewTransaction(this._addNewTransaction);
+        });
+  }
+
   void _deleteTransaction(String id){
-//  setState helps to re-render the class/widget
+//List has some pre-defined methods like removeWhere
     setState(() {
       this._userTransactions.removeWhere((tx) => id == tx.id);
     });
@@ -71,10 +90,11 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Text(
           'Flutter App',
         ),
+//Now we are calling our function to open modal, instead of doing nothing
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.add),
-            onPressed: () => {},
+            onPressed: () => _startAddNewTransaction(context),
           )
         ],
       ),
@@ -87,7 +107,8 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: FloatingActionButton(child: Icon(Icons.add), onPressed: () => {}),
+
+      floatingActionButton: FloatingActionButton(child: Icon(Icons.add), onPressed: () => _startAddNewTransaction(context),),
     );
   }
 }
